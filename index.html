@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhoneTrack+ (Simulasi Edukasi)</title>
     <style>
         /* Reset CSS */
@@ -71,6 +72,25 @@
             outline: none;
             border-color: #00a3ff;
             box-shadow: 0 0 10px rgba(0, 163, 255, 0.3);
+        }
+
+        /* Tombol */
+        button {
+            background: linear-gradient(45deg, #00a3ff, #00ff88);
+            border: none;
+            padding: 12px 25px;
+            color: #000;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 163, 255, 0.4);
         }
 
         /* Halaman Utama */
@@ -146,6 +166,17 @@
             border-radius: 10px;
             border-left: 4px solid #00a3ff;
         }
+
+        @media (max-width: 480px) {
+            .login-box {
+                width: 90%;
+                padding: 1.5rem;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -159,7 +190,7 @@
             <div class="input-group">
                 <input type="password" id="password" placeholder="Password" autocomplete="new-password">
             </div>
-            <button class="login-btn" onclick="handleLogin()">AUTENTIKASI</button>
+            <button onclick="handleLogin()">AUTENTIKASI</button>
             <p class="disclaimer" style="margin-top: 1.5rem; font-size: 0.8rem; color: #888; text-align: center;">
                 Ini adalah simulasi edukasi. Tidak ada data nyata yang diproses.
             </p>
@@ -170,11 +201,11 @@
     <div class="container" id="mainPage">
         <div class="tracking-box">
             <div class="search-box">
-                <input type="text" id="phoneInput" placeholder="+62 [Masukkan Nomor HP]">
+                <input type="tel" id="phoneInput" placeholder="+62 [Masukkan Nomor HP]" pattern="\+62[0-9]{9,13}">
                 <button onclick="initiateTracking()">AKTIFKAN PELACAKAN</button>
             </div>
             
-            <div class="satellite-loader" id="loader">
+            <div class="satellite-loader" id="loader" style="display: none;">
                 <div class="satellite"></div>
                 <div class="signal-bars">
                     <div class="signal-bar"></div>
@@ -216,138 +247,129 @@
         const SIMULATION_DATA = {
             cities: [
                 { 
-                name: "Jakarta", 
-                coordinates: [-6.2088, 106.8456],
-                areas: [
-                    "Thamrin", "Kuningan", "Senayan", "Pluit", "Pasar Minggu",
-                    "Menteng", "Kebayoran Baru", "Cilandak", "Tanjung Priok", "Pademangan"
-                ]
-            },
-            { 
-                name: "Surabaya", 
-                coordinates: [-7.2575, 112.7521],
-                areas: [
-                    "Wonokromo", "Rungkut", "Gubeng", "Tandes", "Sambikerep",
-                    "Wonocolo", "Sukolilo", "Tenggilis", "Darmo", "Gubeng"
-                ]
-            },
-            { 
-                name: "Bandung", 
-                coordinates: [-6.9147, 107.6098],
-                areas: [
-                    "Dago", "Braga", "Cihampelas", "Antapani", "Gedebage",
-                    "Kiaracondong", "Ujung Berung", "Cimahi", "Lembang", "Soreang"
-                ]
-            }
-        ],
+                    name: "Jakarta", 
+                    coordinates: [-6.2088, 106.8456],
+                    areas: [
+                        "Thamrin", "Kuningan", "Senayan", "Pluit", "Pasar Minggu",
+                        "Menteng", "Kebayoran Baru", "Cilandak", "Tanjung Priok", "Pademangan"
+                    ]
+                },
+                { 
+                    name: "Surabaya", 
+                    coordinates: [-7.2575, 112.7521],
+                    areas: [
+                        "Wonokromo", "Rungkut", "Gubeng", "Tandes", "Sambikerep",
+                        "Wonocolo", "Sukolilo", "Tenggilis", "Darmo", "Gubeng"
+                    ]
+                },
+                { 
+                    name: "Bandung", 
+                    coordinates: [-6.9147, 107.6098],
+                    areas: [
+                        "Dago", "Braga", "Cihampelas", "Antapani", "Gedebage",
+                        "Kiaracondong", "Ujung Berung", "Cimahi", "Lembang", "Soreang"
+                    ]
+                }
             ],
-          profiles: [
-            // Laki-laki
-            { name: "Budi Santoso", age: 28, occupation: "Pengusaha" },
-            { name: "Agus Wijaya", age: 35, occupation: "Insinyur" },
-            { name: "Darmawan Setiawan", age: 42, occupation: "Dosen" },
-            
-            // Perempuan
-            { name: "Dewi Lestari", age: 25, occupation: "Desainer Grafis" },
-            { name: "Rina Permata", age: 31, occupation: "Dokter" },
-            { name: "Siti Rahayu", age: 45, occupation: "Pengacara" },
-            
-            // Profil Campuran
-            { name: "Ahmad Fauzi", age: 29, occupation: "Programmer" },
-            { name: "Linda Suryani", age: 27, occupation: "Apoteker" },
-            { name: "Eko Prasetyo", age: 38, occupation: "Kontraktor" },
-            { name: "Maya Wulandari", age: 22, occupation: "Mahasiswa" }
-        ],
-            operators: ["Telkomsel", "XL", "Indosat", "3", "Smartfren"],
+            profiles: [
+                { name: "Budi Santoso", age: 28, occupation: "Pengusaha" },
+                { name: "Agus Wijaya", age: 35, occupation: "Insinyur" },
+                { name: "Darmawan Setiawan", age: 42, occupation: "Dosen" },
+                { name: "Dewi Lestari", age: 25, occupation: "Desainer Grafis" },
+                { name: "Rina Permata", age: 31, occupation: "Dokter" },
+                { name: "Siti Rahayu", age: 45, occupation: "Pengacara" },
+                { name: "Ahmad Fauzi", age: 29, occupation: "Programmer" },
+                { name: "Linda Suryani", age: 27, occupation: "Apoteker" },
+                { name: "Eko Prasetyo", age: 38, occupation: "Kontraktor" },
+                { name: "Maya Wulandari", age: 22, occupation: "Mahasiswa" }
+            ],
+            operators: ["Telkomsel", "XL", "Indosat", "3", "Smartfren", "By.U", "Tri"],
             accuracyLevels: [
-            "±10 meter (Presisi Tinggi)", 
-            "±50 meter (Presisi Menengah)", 
-            "±100 meter (Presisi Standar)", 
-            "±500 meter (Presisi Rendah)"
-        ]
+                "±10 meter (Presisi Tinggi)", 
+                "±50 meter (Presisi Menengah)", 
+                "±100 meter (Presisi Standar)", 
+                "±500 meter (Presisi Rendah)"
+            ]
         };
 
-        // Sistem Audio
-        const audioSystem = {
-            sounds: {
-                beep: new Audio('sfx/beep.mp3'),
-                success: new Audio('sfx/success.mp3'),
-                error: new Audio('sfx/error.mp3')
-            },
-            play: (sound) => {
-                const audio = audioSystem.sounds[sound];
-                audio.currentTime = 0;
-                audio.play().catch(() => {});
-            }
-        };
-
-        // Sistem Autentikasi Simulasi
+        // Sistem Autentikasi
         class AuthSystem {
-            static login(username, password) {
+            static async login(username, password) {
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         resolve(username === "admin" && password === "admin123");
-                    }, 1500);
+                    }, 1000);
                 });
             }
         }
 
-        // Sistem Pelacakan Simulasi
-       class TrackingSystem {
-        static generateFakeLocation() {
-            const city = this.getRandomCity();
-            return {
-                coordinates: this.generateCoordinates(city.coordinates),
-                address: `${this.getRandomArea(city)}, ${city.name}`
-            };
-        }
+        // Sistem Pelacakan
+        class TrackingSystem {
+            static generateFakeLocation() {
+                const city = this.getRandomCity();
+                return {
+                    coordinates: this.generateCoordinates(city.coordinates),
+                    address: `${this.getRandomArea(city)}, ${city.name}`
+                };
+            }
 
-        static getRandomCity() {
-            return SIMULATION_DATA.cities[
-                Math.floor(Math.random() * SIMULATION_DATA.cities.length)
-            ];
-        }
+            static getRandomCity() {
+                return SIMULATION_DATA.cities[
+                    Math.floor(Math.random() * SIMULATION_DATA.cities.length)
+                ];
+            }
 
-        static getRandomArea(city) {
-            return city.areas[
-                Math.floor(Math.random() * city.areas.length)
-            ];
-        }
+            static getRandomArea(city) {
+                return city.areas[
+                    Math.floor(Math.random() * city.areas.length)
+                ];
+            }
 
-        static generateCoordinates(base) {
-            return [
-                base[0] + (Math.random() * 0.1 - 0.05),
-                base[1] + (Math.random() * 0.1 - 0.05)
-            ];
-        }
+            static generateCoordinates(base) {
+                return [
+                    base[0] + (Math.random() * 0.1 - 0.05),
+                    base[1] + (Math.random() * 0.1 - 0.05)
+                ];
+            }
 
-        static getRandomProfile() {
-            return SIMULATION_DATA.profiles[
-                Math.floor(Math.random() * SIMULATION_DATA.profiles.length)
-            ];
+            static getRandomProfile() {
+                return SIMULATION_DATA.profiles[
+                    Math.floor(Math.random() * SIMULATION_DATA.profiles.length)
+                ];
+            }
         }
-    }
 
         // Event Handlers
         async function handleLogin() {
-            audioSystem.play('beep');
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            const isAuthenticated = await AuthSystem.login(username, password);
+            if(!username || !password) {
+                alert('Harap isi username dan password!');
+                return;
+            }
             
-            if(isAuthenticated) {
-                document.getElementById('loginPage').style.display = 'none';
-                document.getElementById('mainPage').style.display = 'block';
-                audioSystem.play('success');
-            } else {
-                alert('Autentikasi gagal! Coba: admin/admin123');
-                audioSystem.play('error');
+            try {
+                const isAuthenticated = await AuthSystem.login(username, password);
+                
+                if(isAuthenticated) {
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('mainPage').style.display = 'block';
+                } else {
+                    throw new Error('Autentikasi gagal! Gunakan:\nUsername: admin\nPassword: admin123');
+                }
+            } catch (error) {
+                alert(error.message);
             }
         }
 
         async function initiateTracking() {
-            audioSystem.play('beep');
+            const phoneInput = document.getElementById('phoneInput');
+            if(!phoneInput.checkValidity()) {
+                alert('Format nomor tidak valid! Contoh: +628123456789');
+                return;
+            }
+            
             document.getElementById('loader').style.display = 'block';
             document.getElementById('results').style.display = 'none';
             
@@ -360,10 +382,10 @@
             // Update UI
             document.getElementById('location').textContent = location.address;
             document.getElementById('userProfile').innerHTML = `
-            <strong>${profile.name}</strong><br>
-            Usia: ${profile.age}<br>
-            Pekerjaan: ${profile.occupation}
-        `;
+                <strong>${profile.name}</strong><br>
+                Usia: ${profile.age}<br>
+                Pekerjaan: ${profile.occupation}
+            `;
             document.getElementById('operator').textContent = 
                 SIMULATION_DATA.operators[Math.floor(Math.random() * SIMULATION_DATA.operators.length)];
             document.getElementById('accuracy').textContent = 
@@ -372,7 +394,6 @@
             // Tampilkan hasil
             document.getElementById('loader').style.display = 'none';
             document.getElementById('results').style.display = 'block';
-            audioSystem.play('success');
             
             // Update peta
             updateMap(location.coordinates);
@@ -391,7 +412,7 @@
 
         // Inisialisasi
         window.onload = () => {
-            alert("PERINGATAN:\nIni adalah simulasi edukasi tentang teknologi pelacakan. Tidak ada data nyata yang diproses atau disimpan!");
+            alert("SIMULASI EDUKASI\n\nSelamat datang di PhoneTrack+!\n\nGunakan:\nUsername: admin\nPassword: admin123");
         }
     </script>
 </body>
