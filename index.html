@@ -216,22 +216,55 @@
         const SIMULATION_DATA = {
             cities: [
                 { 
-                    name: "Jakarta", 
-                    coordinates: [-6.2088, 106.8456],
-                    areas: ["Thamrin", "Kuningan", "Senayan", "Pluit", "Pasar Minggu"]
-                },
-                // ... Tambahkan kota lainnya
+                name: "Jakarta", 
+                coordinates: [-6.2088, 106.8456],
+                areas: [
+                    "Thamrin", "Kuningan", "Senayan", "Pluit", "Pasar Minggu",
+                    "Menteng", "Kebayoran Baru", "Cilandak", "Tanjung Priok", "Pademangan"
+                ]
+            },
+            { 
+                name: "Surabaya", 
+                coordinates: [-7.2575, 112.7521],
+                areas: [
+                    "Wonokromo", "Rungkut", "Gubeng", "Tandes", "Sambikerep",
+                    "Wonocolo", "Sukolilo", "Tenggilis", "Darmo", "Gubeng"
+                ]
+            },
+            { 
+                name: "Bandung", 
+                coordinates: [-6.9147, 107.6098],
+                areas: [
+                    "Dago", "Braga", "Cihampelas", "Antapani", "Gedebage",
+                    "Kiaracondong", "Ujung Berung", "Cimahi", "Lembang", "Soreang"
+                ]
+            }
+        ],
             ],
-            profiles: [
-                {
-                    name: "Budi Santoso",
-                    age: 28,
-                    occupation: "Pengusaha"
-                },
-                // ... Tambahkan profil lainnya
-            ],
+          profiles: [
+            // Laki-laki
+            { name: "Budi Santoso", age: 28, occupation: "Pengusaha" },
+            { name: "Agus Wijaya", age: 35, occupation: "Insinyur" },
+            { name: "Darmawan Setiawan", age: 42, occupation: "Dosen" },
+            
+            // Perempuan
+            { name: "Dewi Lestari", age: 25, occupation: "Desainer Grafis" },
+            { name: "Rina Permata", age: 31, occupation: "Dokter" },
+            { name: "Siti Rahayu", age: 45, occupation: "Pengacara" },
+            
+            // Profil Campuran
+            { name: "Ahmad Fauzi", age: 29, occupation: "Programmer" },
+            { name: "Linda Suryani", age: 27, occupation: "Apoteker" },
+            { name: "Eko Prasetyo", age: 38, occupation: "Kontraktor" },
+            { name: "Maya Wulandari", age: 22, occupation: "Mahasiswa" }
+        ],
             operators: ["Telkomsel", "XL", "Indosat", "3", "Smartfren"],
-            accuracyLevels: ["±10 meter", "±50 meter", "±100 meter", "±500 meter"]
+            accuracyLevels: [
+            "±10 meter (Presisi Tinggi)", 
+            "±50 meter (Presisi Menengah)", 
+            "±100 meter (Presisi Standar)", 
+            "±500 meter (Presisi Rendah)"
+        ]
         };
 
         // Sistem Audio
@@ -260,24 +293,40 @@
         }
 
         // Sistem Pelacakan Simulasi
-        class TrackingSystem {
-            static generateFakeLocation() {
-                const city = SIMULATION_DATA.cities[
-                    Math.floor(Math.random() * SIMULATION_DATA.cities.length)
-                ];
-                const area = city.areas[
-                    Math.floor(Math.random() * city.areas.length)
-                ];
-                
-                return {
-                    coordinates: [
-                        city.coordinates[0] + (Math.random() * 0.1 - 0.05),
-                        city.coordinates[1] + (Math.random() * 0.1 - 0.05)
-                    ],
-                    address: `${area}, ${city.name}`
-                };
-            }
+       class TrackingSystem {
+        static generateFakeLocation() {
+            const city = this.getRandomCity();
+            return {
+                coordinates: this.generateCoordinates(city.coordinates),
+                address: `${this.getRandomArea(city)}, ${city.name}`
+            };
         }
+
+        static getRandomCity() {
+            return SIMULATION_DATA.cities[
+                Math.floor(Math.random() * SIMULATION_DATA.cities.length)
+            ];
+        }
+
+        static getRandomArea(city) {
+            return city.areas[
+                Math.floor(Math.random() * city.areas.length)
+            ];
+        }
+
+        static generateCoordinates(base) {
+            return [
+                base[0] + (Math.random() * 0.1 - 0.05),
+                base[1] + (Math.random() * 0.1 - 0.05)
+            ];
+        }
+
+        static getRandomProfile() {
+            return SIMULATION_DATA.profiles[
+                Math.floor(Math.random() * SIMULATION_DATA.profiles.length)
+            ];
+        }
+    }
 
         // Event Handlers
         async function handleLogin() {
@@ -306,11 +355,15 @@
             await new Promise(resolve => setTimeout(resolve, 3000));
             
             const location = TrackingSystem.generateFakeLocation();
+            const profile = TrackingSystem.getRandomProfile();
             
             // Update UI
             document.getElementById('location').textContent = location.address;
-            document.getElementById('userProfile').textContent = 
-                `${SIMULATION_DATA.profiles[0].name}, ${SIMULATION_DATA.profiles[0].age}`;
+            document.getElementById('userProfile').innerHTML = `
+            <strong>${profile.name}</strong><br>
+            Usia: ${profile.age}<br>
+            Pekerjaan: ${profile.occupation}
+        `;
             document.getElementById('operator').textContent = 
                 SIMULATION_DATA.operators[Math.floor(Math.random() * SIMULATION_DATA.operators.length)];
             document.getElementById('accuracy').textContent = 
