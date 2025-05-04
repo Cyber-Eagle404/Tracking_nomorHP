@@ -2,205 +2,344 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>TraceSim Pro (Simulasi Edukasional)</title>
+    <title>PhoneTrack+ (Simulasi Edukasi)</title>
     <style>
-        :root {
-            --primary: #00ff88;
-            --secondary: #00a3ff;
-            --dark: #0a0a0a;
-            --gray: #1a1a1a;
-        }
-
-        /* Reset dan Base Styles */
+        /* Reset CSS */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
-            background: var(--dark);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0f0f0f;
             color: #fff;
             min-height: 100vh;
-            line-height: 1.6;
         }
 
-        /* Sistem Grid Modern */
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            padding: 2rem;
+        /* Halaman Login */
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
         }
 
-        /* Kartu Profil Detail */
-        .profile-card {
-            background: var(--gray);
+        .login-box {
+            background: rgba(40, 40, 40, 0.95);
+            padding: 2.5rem;
             border-radius: 15px;
-            padding: 2rem;
+            width: 400px;
+            box-shadow: 0 0 30px rgba(0, 150, 255, 0.2);
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, #00ff88, #00a3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
             position: relative;
-            overflow: hidden;
-            border-left: 5px solid var(--primary);
         }
 
-        .profile-card::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(0, 163, 255, 0.1), transparent);
-            transform: rotate(45deg);
-        }
-
-        /* Animasi Scan Satelit */
-        .satellite-scan {
-            position: relative;
-            height: 300px;
-            background: #000;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .scan-beam {
-            position: absolute;
+        .input-group input {
             width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            animation: scan 3s infinite linear;
-            box-shadow: 0 0 30px var(--primary);
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
-        @keyframes scan {
-            0% { top: 0; opacity: 0; }
-            50% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
+        .input-group input:focus {
+            outline: none;
+            border-color: #00a3ff;
+            box-shadow: 0 0 10px rgba(0, 163, 255, 0.3);
+        }
+
+        /* Halaman Utama */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            display: none;
+        }
+
+        .tracking-box {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 0 30px rgba(0, 163, 255, 0.1);
+        }
+
+        /* Animasi Loading */
+        .satellite-loader {
+            position: relative;
+            height: 200px;
+            margin: 2rem 0;
+        }
+
+        .satellite {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300a3ff"><path d="M18 7c-1.1 0-2 .9-2 2 0 .2 0 .5.1.7l-3.3 3.3c-.2-.1-.5-.1-.7-.1-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2c0-.2 0-.5-.1-.7l3.3-3.3c.2.1.5.1.7.1 1.1 0 2-.9 2-2s-.9-2-2-2M6 12c0-1.1.9-2 2-2 .2 0 .5 0 .7.1l3.3-3.3C11.5 6.4 11.2 6.4 11 6.4c-1.1 0-2 .9-2 2s.9 2 2 2c.2 0 .5 0 .7-.1l-3.3 3.3C8.5 14 8.2 14 8 14c-1.1 0-2-.9-2-2"/></svg>');
+            animation: orbit 4s linear infinite;
+        }
+
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+        }
+
+        .signal-bars {
+            display: flex;
+            gap: 5px;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .signal-bar {
+            width: 25px;
+            background: #00ff88;
+            animation: signal 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes signal {
+            from { height: 10px; opacity: 0.3; }
+            to { height: 40px; opacity: 1; }
+        }
+
+        .signal-bar:nth-child(2) { animation-delay: 0.2s; }
+        .signal-bar:nth-child(3) { animation-delay: 0.4s; }
+        .signal-bar:nth-child(4) { animation-delay: 0.6s; }
+
+        /* Hasil Pelacakan */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: rgba(50, 50, 50, 0.5);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #00a3ff;
         }
     </style>
 </head>
 <body>
-    <!-- Konten Utama -->
-    <div class="container">
-        <div class="grid-container">
-            <!-- Panel Profil -->
-            <div class="profile-card">
-                <h2>🆔 Identitas Pengguna</h2>
-                <div id="userIdentity" class="profile-details"></div>
+    <!-- Halaman Login -->
+    <div class="login-wrapper" id="loginPage">
+        <div class="login-box">
+            <h1 class="login-title">PHONETRACK+</h1>
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Username" autocomplete="off">
             </div>
-
-            <!-- Panel Device -->
-            <div class="profile-card">
-                <h2>📱 Info Perangkat</h2>
-                <div id="deviceInfo" class="profile-details"></div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" autocomplete="new-password">
             </div>
+            <button class="login-btn" onclick="handleLogin()">AUTENTIKASI</button>
+            <p class="disclaimer" style="margin-top: 1.5rem; font-size: 0.8rem; color: #888; text-align: center;">
+                Ini adalah simulasi edukasi. Tidak ada data nyata yang diproses.
+            </p>
         </div>
+    </div>
 
-        <div class="satellite-scan">
-            <div class="scan-beam"></div>
+    <!-- Halaman Utama -->
+    <div class="container" id="mainPage">
+        <div class="tracking-box">
+            <div class="search-box">
+                <input type="text" id="phoneInput" placeholder="+62 [Masukkan Nomor HP]">
+                <button onclick="initiateTracking()">AKTIFKAN PELACAKAN</button>
+            </div>
+            
+            <div class="satellite-loader" id="loader">
+                <div class="satellite"></div>
+                <div class="signal-bars">
+                    <div class="signal-bar"></div>
+                    <div class="signal-bar"></div>
+                    <div class="signal-bar"></div>
+                    <div class="signal-bar"></div>
+                </div>
+            </div>
+            
+            <div id="results" style="display: none;">
+                <div class="result-grid">
+                    <div class="result-card">
+                        <h4>📌 Lokasi Terakhir</h4>
+                        <p id="location">Memuat...</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>👤 Profil Pengguna</h4>
+                        <p id="userProfile">Memuat...</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>📶 Operator</h4>
+                        <p id="operator">Memuat...</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>🛰️ Akurasi</h4>
+                        <p id="accuracy">Memuat...</p>
+                    </div>
+                </div>
+                
+                <div id="mapContainer" class="map-container" style="margin-top: 2rem;">
+                    <div id="map" style="height: 400px; border-radius: 10px; overflow: hidden;"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Database Simulasi Terperinci
+        // Database Simulasi
         const SIMULATION_DATA = {
-            names: {
-                first: ["Ahmad", "Budi", "Citra", "Dewi", "Eko", "Fajar", "Gita", "Hadi", "Intan", "Joko", "Kartika", "Laras", "Mega", "Nadia", "Oki", "Puti", "Rizky", "Sari", "Taufik", "Wulan", "Yoga", "Zahra"],
-                last: ["Santoso", "Prasetyo", "Wijaya", "Kusuma", "Hidayat", "Nugroho", "Siregar", "Tanuwijaya", "Halim", "Saputra", "Setiawan", "Budiman", "Rahardjo", "Pangestu", "Winarno"],
-                middle: ["Bin", "Binti", "", "", ""] // 40% chance punya middle name
+            cities: [
+                { 
+                    name: "Jakarta", 
+                    coordinates: [-6.2088, 106.8456],
+                    areas: ["Thamrin", "Kuningan", "Senayan", "Pluit", "Pasar Minggu"]
+                },
+                // ... Tambahkan kota lainnya
+            ],
+            profiles: [
+                {
+                    name: "Budi Santoso",
+                    age: 28,
+                    occupation: "Pengusaha"
+                },
+                // ... Tambahkan profil lainnya
+            ],
+            operators: ["Telkomsel", "XL", "Indosat", "3", "Smartfren"],
+            accuracyLevels: ["±10 meter", "±50 meter", "±100 meter", "±500 meter"]
+        };
+
+        // Sistem Audio
+        const audioSystem = {
+            sounds: {
+                beep: new Audio('sfx/beep.mp3'),
+                success: new Audio('sfx/success.mp3'),
+                error: new Audio('sfx/error.mp3')
             },
-            
-            occupations: {
-                main: ["Dokter", "Insinyur", "Pengusaha", "Seniman", "Programmer", "Guru", "PNS", "Pilot", "Arsitek", "Jurnalis"],
-                spec: ["Spesialis Jantung", "AI Developer", "Kuliner", "Desain Interior", "Siber Security", "Pendidikan Khusus", "Hukum Internasional"]
-            },
-
-            address: {
-                streets: ["Jl. Sudirman", "Jl. Thamrin", "Jl. Gatot Subroto", "Jl. Pemuda", "Jl. Merdeka"],
-                types: ["No.", "Blok", "Komplek", "Kavling", "RT"],
-                cities: ["Jakarta", "Surabaya", "Bandung", "Medan", "Makassar"]
-            },
-
-            devices: {
-                brands: ["Samsung", "Xiaomi", "iPhone", "Oppo", "Vivo"],
-                models: ["Galaxy S23", "Redmi Note 12", "15 Pro Max", "Reno 8", "V27"],
-                os: ["Android 14", "iOS 17", "HarmonyOS 3.0"]
-            },
-
-            generateProfile() {
-                const randomName = {
-                    first: this.names.first[Math.floor(Math.random() * this.names.first.length)],
-                    middle: Math.random() < 0.4 ? this.names.middle[Math.floor(Math.random() * this.names.middle.length)] : "",
-                    last: this.names.last[Math.floor(Math.random() * this.names.last.length)]
-                };
-
-                const fullName = `${randomName.first} ${randomName.middle} ${randomName.last}`.replace(/\s+/g, ' ');
-
-                return {
-                    name: fullName,
-                    age: Math.floor(Math.random() * (65 - 18 + 1)) + 18,
-                    occupation: `${this.occupations.main[Math.floor(Math.random() * this.occupations.main.length)]} ${this.occupations.spec[Math.floor(Math.random() * this.occupations.spec.length)]}`,
-                    address: `${this.address.streets[Math.floor(Math.random() * this.address.streets.length)]} ${this.address.types[Math.floor(Math.random() * this.address.types.length)]} ${Math.floor(Math.random() * 100)}, ${this.address.cities[Math.floor(Math.random() * this.address.cities.length)]}`,
-                    phone: `+62 8${Math.floor(100000000 + Math.random() * 900000000)}`,
-                    device: `${this.devices.brands[Math.floor(Math.random() * this.devices.brands.length)]} ${this.devices.models[Math.floor(Math.random() * this.devices.models.length)]}`,
-                    os: this.devices.os[Math.floor(Math.random() * this.devices.os.length)],
-                    lastSeen: `${Math.floor(Math.random() * 60)} menit yang lalu`,
-                    imei: `35-${Math.floor(10000000 + Math.random() * 90000000)}-${Math.floor(10000 + Math.random() * 90000)}-${Math.floor(100 + Math.random() * 900)}`
-                };
+            play: (sound) => {
+                const audio = audioSystem.sounds[sound];
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
             }
         };
 
-        // Sistem Generasi Profil
-        function generateDetailedProfile() {
-            const profile = SIMULATION_DATA.generateProfile();
-            
-            // Update Panel Identitas
-            document.getElementById('userIdentity').innerHTML = `
-                <div class="detail-item">
-                    <span class="label">📛 Nama Lengkap</span>
-                    <span class="value">${profile.name}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">🎂 Usia</span>
-                    <span class="value">${profile.age} Tahun</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">💼 Profesi</span>
-                    <span class="value">${profile.occupation}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">🏠 Alamat</span>
-                    <span class="value">${profile.address}</span>
-                </div>
-            `;
+        // Sistem Autentikasi Simulasi
+        class AuthSystem {
+            static login(username, password) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(username === "admin" && password === "admin123");
+                    }, 1500);
+                });
+            }
+        }
 
-            // Update Panel Device
-            document.getElementById('deviceInfo').innerHTML = `
-                <div class="detail-item">
-                    <span class="label">📱 Perangkat</span>
-                    <span class="value">${profile.device}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">⚙️ Sistem Operasi</span>
-                    <span class="value">${profile.os}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">🔢 IMEI</span>
-                    <span class="value">${profile.imei}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">⏳ Terakhir Aktif</span>
-                    <span class="value">${profile.lastSeen}</span>
-                </div>
-            `;
+        // Sistem Pelacakan Simulasi
+        class TrackingSystem {
+            static generateFakeLocation() {
+                const city = SIMULATION_DATA.cities[
+                    Math.floor(Math.random() * SIMULATION_DATA.cities.length)
+                ];
+                const area = city.areas[
+                    Math.floor(Math.random() * city.areas.length)
+                ];
+                
+                return {
+                    coordinates: [
+                        city.coordinates[0] + (Math.random() * 0.1 - 0.05),
+                        city.coordinates[1] + (Math.random() * 0.1 - 0.05)
+                    ],
+                    address: `${area}, ${city.name}`
+                };
+            }
+        }
+
+        // Event Handlers
+        async function handleLogin() {
+            audioSystem.play('beep');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const isAuthenticated = await AuthSystem.login(username, password);
+            
+            if(isAuthenticated) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('mainPage').style.display = 'block';
+                audioSystem.play('success');
+            } else {
+                alert('Autentikasi gagal! Coba: admin/admin123');
+                audioSystem.play('error');
+            }
+        }
+
+        async function initiateTracking() {
+            audioSystem.play('beep');
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            
+            // Simulasi proses pelacakan
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            const location = TrackingSystem.generateFakeLocation();
+            
+            // Update UI
+            document.getElementById('location').textContent = location.address;
+            document.getElementById('userProfile').textContent = 
+                `${SIMULATION_DATA.profiles[0].name}, ${SIMULATION_DATA.profiles[0].age}`;
+            document.getElementById('operator').textContent = 
+                SIMULATION_DATA.operators[Math.floor(Math.random() * SIMULATION_DATA.operators.length)];
+            document.getElementById('accuracy').textContent = 
+                SIMULATION_DATA.accuracyLevels[Math.floor(Math.random() * SIMULATION_DATA.accuracyLevels.length)];
+            
+            // Tampilkan hasil
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            audioSystem.play('success');
+            
+            // Update peta
+            updateMap(location.coordinates);
+        }
+
+        function updateMap(coords) {
+            const mapDiv = document.getElementById('map');
+            mapDiv.innerHTML = `<iframe
+                width="100%"
+                height="400"
+                frameborder="0"
+                scrolling="no"
+                src="https://maps.google.com/maps?q=${coords[0]},${coords[1]}&z=16&output=embed">
+            </iframe>`;
         }
 
         // Inisialisasi
         window.onload = () => {
-            generateDetailedProfile();
-            setInterval(generateDetailedProfile, 5000); // Auto-update setiap 5 detik
-        };
+            alert("PERINGATAN:\nIni adalah simulasi edukasi tentang teknologi pelacakan. Tidak ada data nyata yang diproses atau disimpan!");
+        }
     </script>
 </body>
 </html>
